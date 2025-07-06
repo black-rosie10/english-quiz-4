@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Quiz - Questions 30-40</title>
+    <link href="https://fonts.googleapis.com/css2?family=Snow+Buddy&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-title {
+            font-family: 'Snow Buddy', cursive;
+            font-size: 2.5rem;
+            color: #4b0082;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .question-counter {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+        }
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+        }
+
+        .option.selected {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #666;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-marker {
+            background: #4caf50;
+            border-color: #4caf50;
+            color: white;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .hint-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .hint-box.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hint-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hint-text {
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .final-score {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 30px 20px;
+            }
+            
+            .quiz-title {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .option {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header">
+            <h1 class="quiz-title">English Quiz</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="question-counter" id="questionCounter">Question 30 of 40</div>
+        </div>
+
+        <div class="question-box" id="questionBox">
+            <!-- Questions will be loaded here -->
+        </div>
+
+        <div class="hint-box" id="hintBox">
+            <div class="hint-title">
+                💡 Hint
+            </div>
+            <div class="hint-text" id="hintText"></div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-primary" id="checkBtn">Check Answer</button>
+            <button class="btn btn-next" id="nextBtn" style="display: none;">Next Question</button>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-info">
+                <span id="currentPage">Page 1 of 10</span>
+            </div>
+            <div class="nav-info">
+                Score: <span id="currentScore">0</span>/10
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data with hints - Questions 30-40
+        const questions = [
+            {
+                q: "30. Which of the following words has a positive connotation?",
+                options: ["Stubborn", "Determined", "Pushy", "Bossy"],
+                correct: 1,
+                hint: "Connotation refers to the emotional or cultural associations of a word. Look for the word that suggests positive qualities like persistence and resolve."
+            },
+            {
+                q: "31. A biography is:",
+                options: ["A story written about someone's life by someone else", "A self-written life story", "A fictional narration", "A poetry collection"],
+                correct: 0,
+                hint: "The prefix 'bio-' means life, and '-graphy' means writing. Think about who writes about another person's life."
+            },
+            {
+                q: "32. The baby was sleeping. The underlined verb is a/an:",
+                options: ["Helping verb", "Irregular verb", "Transitive verb", "Intransitive verb"],
+                correct: 3,
+                hint: "Consider whether the verb 'sleeping' needs a direct object to complete its meaning. Does the baby sleep something, or just sleep?"
+            },
+            {
+                q: "33. Sonnet is an example of:",
+                options: ["Poetry", "Fiction", "Non fiction", "Biography"],
+                correct: 0,
+                hint: "A sonnet is a 14-line verse form with a specific rhyme scheme. Think about what category this literary form belongs to."
+            },
+            {
+                q: "34. Which of the following sentences contains a participle?",
+                options: ["The barking dog scared the children.", "I like reading books before bed.", "She wants to visit Paris next year.", "To swim in the lake is the fun."],
+                correct: 0,
+                hint: "A participle is a verb form that acts as an adjective. Look for a word ending in -ing or -ed that describes a noun."
+            },
+            {
+                q: "35. Identify the gerund phrase: 'Swimming in the ocean is fun.'",
+                options: ["Is fun", "In the ocean", "Swimming in the ocean", "Ocean is"],
+                correct: 2,
+                hint: "A gerund phrase includes the gerund (verb + ing used as a noun) plus any modifiers. What part of the sentence acts as the subject?"
+            },
+            {
+                q: "36. What type of sentence is: 'Can you help me with my homework?'",
+                options: ["Interrogative", "Declarative", "Imperative", "Exclamatory"],
+                correct: 0,
+                hint: "Look at the sentence structure and punctuation. This sentence is asking something and ends with a question mark."
+            },
+            {
+                q: "37. Which phrase contains an oxymoron?",
+                options: ["Deafening silence", "Dark shadows", "As soft as cotton", "The roaring ocean"],
+                correct: 0,
+                hint: "An oxymoron combines two contradictory terms. Look for words that seem to oppose each other in meaning."
+            },
+            {
+                q: "38. In the phrase 'life is a rollercoaster,' the poetic device used is:",
+                options: ["Simile", "Metaphor", "Personification", "Alliteration"],
+                correct: 1,
+                hint: "This phrase directly compares life to a rollercoaster without using 'like' or 'as'. It states that one thing IS another."
+            },
+            {
+                q: "39. Which of the following is a transitional device used to show contrast?",
+                options: ["Furthermore", "However", "Therefore", "In addition"],
+                correct: 1,
+                hint: "Transitional devices that show contrast indicate a difference or opposition between ideas. Look for the word that signals 'but' or 'on the other hand'."
+            },
+            {
+                q: "40. Which transitional device best fits in the blank? 'She loves coffee; ____, she dislikes tea.'",
+                options: ["Consequently", "However", "For example", "Moreover"],
+                correct: 1,
+                hint: "The sentence shows two contrasting preferences. You need a word that indicates this contrast between loving coffee and disliking tea."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let hasAnswered = false;
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 30} of 40`;
+            document.getElementById('currentPage').textContent = `Page ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('currentScore').textContent = score;
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showFinalScore();
+                return;
+            }
+
+            const question = questions[currentQuestion];
+            const questionBox = document.getElementById('questionBox');
+            
+            questionBox.innerHTML = `
+                <div class="question-text">${question.q}</div>
+                <div class="options">
+                    ${question.options.map((option, index) => `
+                        <div class="option" onclick="selectAnswer(${index})">
+                            <div class="option-marker">${String.fromCharCode(65 + index)}</div>
+                            <span>${option}</span>
+                            <input type="radio" name="answer" value="${index}">
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Reset UI state
+            document.getElementById('checkBtn').style.display = 'inline-block';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('hintBox').classList.remove('show');
+            selectedAnswer = null;
+            hasAnswered = false;
+            
+            updateProgress();
+        }
+
+        function selectAnswer(index) {
+            if (hasAnswered) return;
+            
+            selectedAnswer = index;
+            
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            document.querySelectorAll('.option')[index].classList.add('selected');
+        }
+
+        function checkAnswer() {
+            if (selectedAnswer === null) {
+                alert('Please select an answer first!');
+                return;
+            }
+
+            if (hasAnswered) return;
+            
+            hasAnswered = true;
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            // Show correct answer
+            options[question.correct].classList.add('correct');
+            
+            if (selectedAnswer === question.correct) {
+                score++;
+                alert('Correct! Well done! 🎉');
+            } else {
+                options[selectedAnswer].classList.add('incorrect');
+                showHint(question.hint);
+            }
+            
+            // Update UI
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('currentScore').textContent = score;
+            
+            // Disable all options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+        }
+
+        function showHint(hintText) {
+            const hintBox = document.getElementById('hintBox');
+            const hintTextElement = document.getElementById('hintText');
+            
+            hintTextElement.textContent = hintText;
+            hintBox.classList.add('show');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showFinalScore() {
+            const percentage = Math.round((score / questions.length) * 100);
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = 'Outstanding! You\'re an English expert! 🌟';
+            } else if (percentage >= 70) {
+                message = 'Great job! You have a solid understanding! 👏';
+            } else if (percentage >= 50) {
+                message = 'Good effort! Keep practicing! 💪';
+            } else {
+                message = 'Keep learning! You\'ll improve with practice! 📚';
+            }
+            
+            document.getElementById('questionBox').innerHTML = `
+                <div class="final-score">
+                    <div class="score-number">${score}/${questions.length}</div>
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">${percentage}%</div>
+                    <div style="font-size: 1.2rem;">${message}</div>
+                    <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 20px;">
+                        Start Over
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('hintBox').classList.remove('show');
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedAnswer = null;
+            hasAnswered = false;
+            loadQuestion();
+        }
+
+        // Event listeners
+        document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
